@@ -17,6 +17,22 @@ routes.get('/getRubros',(req,res)=>{
     })
 })//LISTO
 
+routes.get('/getNegocios/:id_rubro',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM TM_TIEN WHERE CO_RUBR_TIEN = ?' , [req.params.id_rubro] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }
+    })
+})//LISTO 1 
+
 routes.get('/getCategorias/:id_tienda',(req,res)=>{
     req.getConnection((err,conn) => {
         if (err) {
@@ -33,21 +49,22 @@ routes.get('/getCategorias/:id_tienda',(req,res)=>{
     })
 })//LISTO 0 , 1 , 2
 
-routes.get('/getNegocios/:id_rubro',(req,res)=>{
+routes.get('/getProductos/:id_categoria',(req,res)=>{
     req.getConnection((err,conn) => {
         if (err) {
             return res.send(err)
         }else{
-            conn.query('SELECT * FROM TM_TIEN WHERE CO_RUBR_TIEN = ?' , [req.params.id_rubro] , (err,rows) => {
+            conn.query('SELECT * FROM TM_ITEM WHERE  CO_CATE = ?' , [req.params.id_categoria] , (err,rows) => {
                 if (err) {
                     return res.send(err)
                 }else{
                     res.json(rows)
                 }
             })
-        }
+        }   
     })
-})//LISTO 1 
+})//LISTO 5
+
 
 routes.post('/PostLogin',(req,res)=>{
     req.getConnection((err,conn) => {
