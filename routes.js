@@ -49,12 +49,12 @@ routes.get('/getCategorias/:id_tienda',(req,res)=>{
     })
 })//LISTO 0 , 1 , 2
 
-routes.get('/getProductos/:id_categoria',(req,res)=>{
+routes.post('/getProductos',(req,res)=>{
     req.getConnection((err,conn) => {
         if (err) {
             return res.send(err)
         }else{
-            conn.query('SELECT * FROM TM_ITEM WHERE  CO_CATE = ?' , [req.params.id_categoria] , (err,rows) => {
+            conn.query('SELECT * FROM TM_ITEM WHERE CO_CATE = ? && CO_TIEN = ?' , [req.body.id_categoria,req.body.id_tienda] , (err,rows) => {
                 if (err) {
                     return res.send(err)
                 }else{
@@ -64,7 +64,6 @@ routes.get('/getProductos/:id_categoria',(req,res)=>{
         }   
     })
 })//LISTO 5
-
 
 routes.post('/PostLogin',(req,res)=>{
     req.getConnection((err,conn) => {
