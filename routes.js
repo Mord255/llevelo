@@ -65,6 +65,22 @@ routes.post('/getProductos',(req,res)=>{
     })
 })//LISTO 5
 
+routes.get('/getItem/:id_item',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM `TM_ITEM` WHERE CO_ITEM = ?' , [req.params.id_item] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }   
+    })
+})
+
 routes.get('/getPreguntas/:id_item',(req,res)=>{
     req.getConnection((err,conn) => {
         if (err) {
