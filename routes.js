@@ -65,6 +65,44 @@ routes.post('/getProductos',(req,res)=>{
     })
 })//LISTO 5
 
+routes.get('/getPreguntas/:id_preguntas',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM `TM_ADIC_PREGUNTAS` WHERE CO_ITEM_ADC = ?' , [req.params.id_preguntas] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }   
+    })
+})
+
+routes.get('/getRespuestas/:id_respuestas',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM `TM_ADIC_RESPUESTAS` WHERE CO_ADIC_PRGT = ?' , [req.params.id_respuestas] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }   
+    })
+})
+
+
+
+
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 routes.post('/PostLogin',(req,res)=>{
     req.getConnection((err,conn) => {
         if (err) {
