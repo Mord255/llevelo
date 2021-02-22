@@ -149,7 +149,23 @@ routes.post('/PostRegister',(req,res)=>{
             })
         }
     })
-})//LISTO 
+})//LISTO
+
+routes.get('/getDataUser/:id_usuario',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM `TM_USUA` WHERE ID_USUA = ?' , [req.params.id_usuario] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }   
+    })
+})
 
 
 module.exports = routes
