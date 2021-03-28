@@ -111,10 +111,40 @@ routes.get('/getRespuestas/:id_preguntas',(req,res)=>{
             })
         }   
     })
+});
+
+//traer productos por id de tienda
+routes.get('/getProductosxTienda/:id_tienda',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM `TM_ITEM` WHERE CO_TIEN = ?' , [req.params.id_tienda] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }   
+    })
 })
 
-
-
+routes.get('/getDataUser/:id_usuario',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM `TM_USUA` WHERE ID_USUA = ?' , [req.params.id_usuario] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }   
+    })
+})
 
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -125,6 +155,22 @@ routes.post('/PostLogin',(req,res)=>{
             return res.send(err)
         }else{
             conn.query('SELECT * FROM TM_USUA WHERE DI_CORR_USUA = ? AND IN_PASS_USUA = ? ' , [req.body.usuario,req.body.password] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }
+    })
+})//LISTO
+
+routes.post('/LoginTienda',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM TM_USUA_TIENDA WHERE CO_USUARIO = ? && CO_PASSWORD = ?' , [req.body.user_tienda,req.body.pass_tienda] , (err,rows) => {
                 if (err) {
                     return res.send(err)
                 }else{
