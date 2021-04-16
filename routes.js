@@ -111,7 +111,41 @@ routes.get('/getRespuestas/:id_preguntas',(req,res)=>{
             })
         }   
     })
-});
+})
+
+routes.post('/registerItem',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('INSERT INTO `TM_ITEM`(`NO_ITEM`, `ITEM_DESCRIPCION`, `UN_MEDI`, `CA_STOC`, `PREC`, `LI_IMAG`, `ES_ITEM`, `FE_CREA_USUA`, `CO_MODI_USUA`, `CO_CATE`, `CO_TIEN`) VALUES (?,?,?,?,?,?,?,?,?,?,?)' , [req.body.item_nombre,req.body.item_descripcion,req.body.item_medida,req.body.item_stock,req.body.item_precio,req.body.item_link_imagen,req.body.item_estado,req.body.item_fecha,req.body.item_modi_usua,req.body.item_codigo_categoria,req.body.item_codigo_tienda] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }   
+    })
+})//LISTO
+
+routes.post('/cambioEstadoItem',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('UPDATE `TM_ITEM` SET `ES_ITEM`=? WHERE CO_ITEM = ?',[req.body.item_estado,req.body.item_codigo] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }   
+    })
+})//LISTO
+
+
 
 //traer productos por id de tienda
 routes.get('/getProductosxTienda/:id_tienda',(req,res)=>{
@@ -130,21 +164,42 @@ routes.get('/getProductosxTienda/:id_tienda',(req,res)=>{
     })
 })
 
-routes.get('/getDataUser/:id_usuario',(req,res)=>{
-    req.getConnection((err,conn) => {
-        if (err) {
-            return res.send(err)
-        }else{
-            conn.query('SELECT * FROM `TM_USUA` WHERE ID_USUA = ?' , [req.params.id_usuario] , (err,rows) => {
-                if (err) {
-                    return res.send(err)
-                }else{
-                    res.json(rows)
-                }
-            })
-        }   
-    })
-})
+// routes.get('/getPregResptProductos/:id_item',(req,res)=>{
+//     let data = [] ;
+//     let data_final = [] ;
+//     req.getConnection((err,conn) => {
+//         if (err) {
+//             return res.send(err)
+//         }else{
+//             conn.query('SELECT * FROM `TM_ADIC_PREGUNTAS` WHERE CO_ITEM_ADC = ?' , [req.params.id_item] , (err,rows) => {
+//                 if (err) {
+//                     return res.send(err)
+//                 }else{
+//                     this.data = rows ;
+//                     this.data_final = rows ;
+//                 }
+//             });
+//         }   
+//     })
+//     respuestas = ["hola"] ;
+//     req.getConnection((err,conn) => {
+//         if (err) {
+//             return res.send(err)
+//         }else{
+//             this.data.forEach((element) => {
+//                 conn.query('SELECT * FROM `TM_ADIC_RESPUESTAS` WHERE CO_ADIC_PRGT = ?' , element['CO_ADIC'] , (err,rows) => {
+//                     if (err) {
+//                         return res.send(err)
+//                     }else{
+//                         respuestas.push(rows);
+//                     }
+//                 });
+//             });
+//             res.send(respuestas);
+//             console.log(respuestas);
+//         }
+//     })
+// })
 
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -165,21 +220,6 @@ routes.post('/PostLogin',(req,res)=>{
     })
 })//LISTO
 
-routes.post('/LoginTienda',(req,res)=>{
-    req.getConnection((err,conn) => {
-        if (err) {
-            return res.send(err)
-        }else{
-            conn.query('SELECT * FROM TM_USUA_TIENDA WHERE CO_USUARIO = ? && CO_PASSWORD = ?' , [req.body.user_tienda,req.body.pass_tienda] , (err,rows) => {
-                if (err) {
-                    return res.send(err)
-                }else{
-                    res.json(rows)
-                }
-            })
-        }
-    })
-})//LISTO
 
 routes.post('/PostRegister',(req,res)=>{
     req.getConnection((err,conn) => {
@@ -195,7 +235,54 @@ routes.post('/PostRegister',(req,res)=>{
             })
         }
     })
-})//LISTO 
+})//LISTO
 
+routes.get('/getDataUser/:id_usuario',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM `TM_USUA` WHERE ID_USUA = ?' , [req.params.id_usuario] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }   
+    })
+})
+
+routes.post('/LoginTienda',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM TM_USUA_TIENDA WHERE CO_USUARIO = ? && CO_PASSWORD = ? && CO_ESTADO = 1' , [req.body.user_tienda,req.body.pass_tienda] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }
+    })
+})//LISTO
+
+routes.post('/LoginRepartidor',(req,res)=>{
+    req.getConnection((err,conn) => {
+        if (err) {
+            return res.send(err)
+        }else{
+            conn.query('SELECT * FROM TM_USUA_REPARTIDOR WHERE RE_CORREO = ? && RE_PASSWORD = ? && RE_ESTADO = 1' , [req.body.user_repartidor,req.body.pass_repartidor] , (err,rows) => {
+                if (err) {
+                    return res.send(err)
+                }else{
+                    res.json(rows)
+                }
+            })
+        }
+    })
+})//LISTO
 
 module.exports = routes
